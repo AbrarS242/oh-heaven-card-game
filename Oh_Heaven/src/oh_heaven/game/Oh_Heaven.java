@@ -58,7 +58,6 @@ public class Oh_Heaven extends CardGame {
   private Player[] players;
   private Location hideLocation = new Location(-500, - 500);
   private Location trumpsActorLocation = new Location(50, 50);
-  private boolean enforceRules=false;
 
   public void setStatus(String string) { setStatusText(string); }
   
@@ -124,6 +123,8 @@ private void initBids(Suit trumps, int nextPlayer) {
  }
 
 private Card selected;
+private Player nextPlay;
+private Suit lead;
 
 private void initRound() {
 		players = new Player[nbPlayers];
@@ -164,7 +165,6 @@ private void playRound() {
 	Hand trick;
 	int winner;
 	Card winningCard;
-	Suit lead;
 	int nextPlayer = CardRandomiser.getInstance().random.nextInt(nbPlayers); // randomly select player to lead for this round
 	initBids(trumps, nextPlayer);
     // initScore();
@@ -173,14 +173,15 @@ private void playRound() {
 		trick = new Hand(deck);
     	selected = null;
     	// if (false) {
-        if (0 == nextPlayer) {  // Select lead depending on player type
-    		players[0].getHand().setTouchEnabled(true);
+		nextPlay = players[nextPlayer];
+        if (nextPlay instanceof ActivePlayer) {  // Select lead depending on player type
+    		nextPlay.getHand().setTouchEnabled(true);
     		setStatus("Player 0 double-click on card to lead.");
     		while (null == selected) delay(100);
         } else {
     		setStatusText("Player " + nextPlayer + " thinking...");
             delay(thinkingTime);
-            selected = players[nextPlayer].pickCard();
+            selected = nextPlay.pickCard();
             //selected = randomCard(hands[nextPlayer]);
         }
         // Lead with selected card
@@ -196,34 +197,41 @@ private void playRound() {
 		for (int j = 1; j < nbPlayers; j++) {
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 			selected = null;
+			nextPlay = players[nextPlayer];
 			// if (false) {
-	        if (0 == nextPlayer) {
-	    		players[0].getHand().setTouchEnabled(true);
+	        if (nextPlay instanceof ActivePlayer) {
+	    		nextPlay.getHand().setTouchEnabled(true);
 	    		setStatus("Player 0 double-click on card to follow.");
 	    		while (null == selected) delay(100);
 	        } else {
 		        setStatusText("Player " + nextPlayer + " thinking...");
 		        delay(thinkingTime);
-				selected = players[nextPlayer].pickCard();
+				selected = nextPlay.pickCard();
 	        }
 	        // Follow with selected card
 		        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 				trick.draw();
 				selected.setVerso(false);  // In case it is upside down
 				// Check: Following card must follow suit if possible
+				if (Referee.getInstance().ruleBroken(selected, nextPlay.getHand())) {
+					Referee.getInstance().violationResponse(nextPlayer, selected);
+				}
+				/*
 					if (selected.getSuit() != lead && players[nextPlayer].getHand().getNumberOfCardsWithSuit(lead) > 0) {
 						 // Rule violation
 						 String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
 						 System.out.println(violation);
-						 if (enforceRules) 
+						 if (enforceRules)
 							 try {
 								 throw(new BrokeRuleException(violation));
 								} catch (BrokeRuleException e) {
 									e.printStackTrace();
 									System.out.println("A cheating player spoiled the game!");
 									System.exit(0);
-								}  
+								}
 					 }
+
+				 */
 				// End Check
 				 selected.transfer(trick, true); // transfer to trick (includes graphic effect)
 				 System.out.println("winning: " + winningCard);
@@ -258,6 +266,7 @@ private void playRound() {
     setStatusText("Initializing...");
     initScores();
     initScore();
+    Referee.setGame(this);
     for (int i=0; i <nbRounds; i++) {
       initTricks();
       initRound();
@@ -295,4 +304,19 @@ private void playRound() {
     new Oh_Heaven();
   }
 
+	public Card getSelected() {
+		return selected;
+	}
+
+	public Player[] getPlayers() {
+		return players;
+	}
+
+	public Player getNextPlay() {
+		return nextPlay;
+	}
+
+	public Suit getLead() {
+		return lead;
+	}
 }
