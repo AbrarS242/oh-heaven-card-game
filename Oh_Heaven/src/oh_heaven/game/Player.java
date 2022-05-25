@@ -6,8 +6,11 @@ import ch.aplu.jcardgame.Hand;
 public abstract class Player {
 
     Hand hand;
+    int playerNum = 0;
 
     public abstract Card pickCard();
+    public abstract String getFollowStatus();
+    public abstract String getLeadStatus();
 
     public Hand getHand() {
         return hand;

@@ -54,7 +54,6 @@ public class Oh_Heaven extends CardGame {
   private Actor[] scoreActors = {null, null, null, null };
   private final Location trickLocation = new Location(350, 350);
   private final Location textLocation = new Location(350, 450);
-  private final int thinkingTime = 2000;
   private Player[] players;
   private Location hideLocation = new Location(-500, - 500);
   private Location trumpsActorLocation = new Location(50, 50);
@@ -128,6 +127,13 @@ private Suit lead;
 
 private void initRound() {
 		players = new Player[nbPlayers];
+
+		players[0] = new ActivePlayer();
+		players[1] = new LegalPlayer();
+		players[2] = new LegalPlayer();
+		players[3] = new LegalPlayer();
+
+
 		for (int i = 0; i < nbPlayers; i++) {
 			   players[i].setHand(new Hand(deck));
 		}
@@ -135,12 +141,6 @@ private void initRound() {
 		 for (int i = 0; i < nbPlayers; i++) {
 			   players[i].getHand().sort(Hand.SortType.SUITPRIORITY, true);
 		 }
-		// Set up human player for interaction (THIS SHOULD BE MOVED/ADJUSTED)
-		CardListener cardListener = new CardAdapter()  // Human Player plays card
-		{
-			public void leftDoubleClicked(Card card) { selected = card; players[0].getHand().setTouchEnabled(false); }
-		};
-		players[0].getHand().addCardListener(cardListener);
 		 // graphics
 	    RowLayout[] layouts = new RowLayout[nbPlayers];
 	    for (int i = 0; i < nbPlayers; i++) {
@@ -174,16 +174,8 @@ private void playRound() {
     	selected = null;
     	// if (false) {
 		nextPlay = players[nextPlayer];
-        if (nextPlay instanceof ActivePlayer) {  // Select lead depending on player type
-    		nextPlay.getHand().setTouchEnabled(true);
-    		setStatus("Player 0 double-click on card to lead.");
-    		while (null == selected) delay(100);
-        } else {
-    		setStatusText("Player " + nextPlayer + " thinking...");
-            delay(thinkingTime);
-            selected = nextPlay.pickCard();
-            //selected = randomCard(hands[nextPlayer]);
-        }
+		setStatus(nextPlay.getLeadStatus());
+		selected = nextPlay.pickCard();
         // Lead with selected card
 	        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 			trick.draw();
@@ -199,15 +191,8 @@ private void playRound() {
 			selected = null;
 			nextPlay = players[nextPlayer];
 			// if (false) {
-	        if (nextPlay instanceof ActivePlayer) {
-	    		nextPlay.getHand().setTouchEnabled(true);
-	    		setStatus("Player 0 double-click on card to follow.");
-	    		while (null == selected) delay(100);
-	        } else {
-		        setStatusText("Player " + nextPlayer + " thinking...");
-		        delay(thinkingTime);
-				selected = nextPlay.pickCard();
-	        }
+			setStatus(nextPlay.getFollowStatus());
+			selected = nextPlay.pickCard();
 	        // Follow with selected card
 		        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 				trick.draw();
@@ -216,22 +201,6 @@ private void playRound() {
 				if (Referee.getInstance().ruleBroken(selected, nextPlay.getHand())) {
 					Referee.getInstance().violationResponse(nextPlayer, selected);
 				}
-				/*
-					if (selected.getSuit() != lead && players[nextPlayer].getHand().getNumberOfCardsWithSuit(lead) > 0) {
-						 // Rule violation
-						 String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
-						 System.out.println(violation);
-						 if (enforceRules)
-							 try {
-								 throw(new BrokeRuleException(violation));
-								} catch (BrokeRuleException e) {
-									e.printStackTrace();
-									System.out.println("A cheating player spoiled the game!");
-									System.exit(0);
-								}
-					 }
-
-				 */
 				// End Check
 				 selected.transfer(trick, true); // transfer to trick (includes graphic effect)
 				 System.out.println("winning: " + winningCard);
@@ -248,6 +217,7 @@ private void playRound() {
 				 }
 			// End Follow
 		}
+		lead = null;
 		delay(600);
 		trick.setView(this, new RowLayout(hideLocation, 0));
 		trick.draw();		

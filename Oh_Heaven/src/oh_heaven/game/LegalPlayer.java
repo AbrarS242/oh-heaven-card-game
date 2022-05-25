@@ -3,7 +3,8 @@ import ch.aplu.jcardgame.Card;
 
 import java.util.ArrayList;
 
-public class LegalPlayer extends Player {
+public class LegalPlayer extends NPCPlayer {
+
     public Card pickCard() {
         ArrayList<Card> legalCards = new ArrayList<>();
         for (Card card: hand.getCardList()) {
