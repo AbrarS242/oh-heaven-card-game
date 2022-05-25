@@ -25,42 +25,6 @@ public class Oh_Heaven extends CardGame {
   }
   
   final String trumpImage[] = {"bigspade.gif","bigheart.gif","bigdiamond.gif","bigclub.gif"};
-
-  static public final int seed = 30006;
-  static final Random random = new Random(seed);
-  
-  // return random Enum value
-  public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
-      int x = random.nextInt(clazz.getEnumConstants().length);
-      return clazz.getEnumConstants()[x];
-  }
-
-  // return random Card from Hand
-  public static Card randomCard(Hand hand){
-      int x = random.nextInt(hand.getNumberOfCards());
-      return hand.get(x);
-  }
- 
-  // return random Card from ArrayList
-  public static Card randomCard(ArrayList<Card> list){
-      int x = random.nextInt(list.size());
-      return list.get(x);
-  }
-  
-  private void dealingOut(Hand[] hands, int nbPlayers, int nbCardsPerPlayer) {
-	  Hand pack = deck.toHand(false);
-	  // pack.setView(Oh_Heaven.this, new RowLayout(hideLocation, 0));
-	  for (int i = 0; i < nbCardsPerPlayer; i++) {
-		  for (int j=0; j < nbPlayers; j++) {
-			  if (pack.isEmpty()) return;
-			  Card dealt = randomCard(pack);
-		      // System.out.println("Cards = " + dealt);
-		      dealt.removeFromHand(false);
-		      hands[j].insert(dealt, false);
-			  // dealt.transfer(hands[j], true);
-		  }
-	  }
-  }
   
   public boolean rankGreater(Card card1, Card card2) {
 	  return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
@@ -91,7 +55,7 @@ public class Oh_Heaven extends CardGame {
   private final Location trickLocation = new Location(350, 350);
   private final Location textLocation = new Location(350, 450);
   private final int thinkingTime = 2000;
-  private Hand[] hands;
+  private Player[] players;
   private Location hideLocation = new Location(-500, - 500);
   private Location trumpsActorLocation = new Location(50, 50);
   private boolean enforceRules=false;
@@ -143,7 +107,7 @@ private void initBids(Suit trumps, int nextPlayer) {
 	int total = 0;
 	for (int i = nextPlayer; i < nextPlayer + nbPlayers; i++) {
 		 int iP = i % nbPlayers;
-		 bids[iP] = nbStartCards / 4 + random.nextInt(2);
+		 bids[iP] = nbStartCards / 4 + CardRandomiser.getInstance().random.nextInt(2);
 		 total += bids[iP];
 	 }
 	 if (total == nbStartCards) {  // Force last bid so not every bid possible
@@ -151,7 +115,7 @@ private void initBids(Suit trumps, int nextPlayer) {
 		 if (bids[iP] == 0) {
 			 bids[iP] = 1;
 		 } else {
-			 bids[iP] += random.nextBoolean() ? -1 : 1;
+			 bids[iP] += CardRandomiser.getInstance().random.nextBoolean() ? -1 : 1;
 		 }
 	 }
 	// for (int i = 0; i < nbPlayers; i++) {
@@ -162,29 +126,29 @@ private void initBids(Suit trumps, int nextPlayer) {
 private Card selected;
 
 private void initRound() {
-		hands = new Hand[nbPlayers];
+		players = new Player[nbPlayers];
 		for (int i = 0; i < nbPlayers; i++) {
-			   hands[i] = new Hand(deck);
+			   players[i].setHand(new Hand(deck));
 		}
-		dealingOut(hands, nbPlayers, nbStartCards);
+		Dealer.getInstance().dealingOut(deck,players, nbPlayers, nbStartCards);
 		 for (int i = 0; i < nbPlayers; i++) {
-			   hands[i].sort(Hand.SortType.SUITPRIORITY, true);
+			   players[i].getHand().sort(Hand.SortType.SUITPRIORITY, true);
 		 }
-		 // Set up human player for interaction
+		// Set up human player for interaction (THIS SHOULD BE MOVED/ADJUSTED)
 		CardListener cardListener = new CardAdapter()  // Human Player plays card
-			    {
-			      public void leftDoubleClicked(Card card) { selected = card; hands[0].setTouchEnabled(false); }
-			    };
-		hands[0].addCardListener(cardListener);
+		{
+			public void leftDoubleClicked(Card card) { selected = card; players[0].getHand().setTouchEnabled(false); }
+		};
+		players[0].getHand().addCardListener(cardListener);
 		 // graphics
 	    RowLayout[] layouts = new RowLayout[nbPlayers];
 	    for (int i = 0; i < nbPlayers; i++) {
 	      layouts[i] = new RowLayout(handLocations[i], handWidth);
 	      layouts[i].setRotationAngle(90 * i);
 	      // layouts[i].setStepDelay(10);
-	      hands[i].setView(this, layouts[i]);
-	      hands[i].setTargetArea(new TargetArea(trickLocation));
-	      hands[i].draw();
+	      players[i].getHand().setView(this, layouts[i]);
+	      players[i].getHand().setTargetArea(new TargetArea(trickLocation));
+	      players[i].getHand().draw();
 	    }
 //	    for (int i = 1; i < nbPlayers; i++) // This code can be used to visually hide the cards in a hand (make them face down)
 //	      hands[i].setVerso(true);			// You do not need to use or change this code.
@@ -193,7 +157,7 @@ private void initRound() {
 
 private void playRound() {
 	// Select and display trump suit
-		final Suit trumps = randomEnum(Suit.class);
+		final Suit trumps = CardRandomiser.getInstance().randomEnum(Suit.class);
 		final Actor trumpsActor = new Actor("sprites/"+trumpImage[trumps.ordinal()]);
 	    addActor(trumpsActor, trumpsActorLocation);
 	// End trump suit
@@ -201,7 +165,7 @@ private void playRound() {
 	int winner;
 	Card winningCard;
 	Suit lead;
-	int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
+	int nextPlayer = CardRandomiser.getInstance().random.nextInt(nbPlayers); // randomly select player to lead for this round
 	initBids(trumps, nextPlayer);
     // initScore();
     for (int i = 0; i < nbPlayers; i++) updateScore(i);
@@ -210,13 +174,14 @@ private void playRound() {
     	selected = null;
     	// if (false) {
         if (0 == nextPlayer) {  // Select lead depending on player type
-    		hands[0].setTouchEnabled(true);
+    		players[0].getHand().setTouchEnabled(true);
     		setStatus("Player 0 double-click on card to lead.");
     		while (null == selected) delay(100);
         } else {
     		setStatusText("Player " + nextPlayer + " thinking...");
             delay(thinkingTime);
-            selected = randomCard(hands[nextPlayer]);
+            selected = players[nextPlayer].pickCard();
+            //selected = randomCard(hands[nextPlayer]);
         }
         // Lead with selected card
 	        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
@@ -233,20 +198,20 @@ private void playRound() {
 			selected = null;
 			// if (false) {
 	        if (0 == nextPlayer) {
-	    		hands[0].setTouchEnabled(true);
+	    		players[0].getHand().setTouchEnabled(true);
 	    		setStatus("Player 0 double-click on card to follow.");
 	    		while (null == selected) delay(100);
 	        } else {
 		        setStatusText("Player " + nextPlayer + " thinking...");
 		        delay(thinkingTime);
-		        selected = randomCard(hands[nextPlayer]);
+				selected = players[nextPlayer].pickCard();
 	        }
 	        // Follow with selected card
 		        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 				trick.draw();
 				selected.setVerso(false);  // In case it is upside down
 				// Check: Following card must follow suit if possible
-					if (selected.getSuit() != lead && hands[nextPlayer].getNumberOfCardsWithSuit(lead) > 0) {
+					if (selected.getSuit() != lead && players[nextPlayer].getHand().getNumberOfCardsWithSuit(lead) > 0) {
 						 // Rule violation
 						 String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
 						 System.out.println(violation);
