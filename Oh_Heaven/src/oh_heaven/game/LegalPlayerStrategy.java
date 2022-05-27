@@ -1,11 +1,12 @@
 package oh_heaven.game;
 import ch.aplu.jcardgame.Card;
+import ch.aplu.jcardgame.Hand;
 
 import java.util.ArrayList;
 
-public class LegalPlayer extends NPCPlayer {
+public class LegalPlayerStrategy implements NPCPlayerStrategy {
 
-    public Card pickCard() {
+    public Card pickCard(Hand hand) {
         ArrayList<Card> legalCards = new ArrayList<>();
         for (Card card: hand.getCardList()) {
             if (!Referee.getInstance().ruleBroken(card, hand)) {

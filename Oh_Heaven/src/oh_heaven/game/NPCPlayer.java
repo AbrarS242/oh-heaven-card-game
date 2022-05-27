@@ -1,14 +1,16 @@
 package oh_heaven.game;
 
 import ch.aplu.jcardgame.Card;
+import ch.aplu.jgamegrid.Actor;
 
 import static ch.aplu.jgamegrid.Actor.delay;
 
-public abstract class NPCPlayer extends Player {
+public class NPCPlayer extends Player {
     private final int thinkingTime = 2000;
+    private NPCPlayerStrategy strategy = new LegalPlayerStrategy();
     public Card pickCard() {
         delay(thinkingTime);
-        return this.pickCard();
+        return strategy.pickCard(hand);
     }
     public String getFollowStatus() {
         return "Player " + playerNum + " thinking...";

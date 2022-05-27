@@ -128,10 +128,12 @@ private Suit lead;
 private void initRound() {
 		players = new Player[nbPlayers];
 
+		// Below needs to be changed to account for property file
+
 		players[0] = new ActivePlayer();
-		players[1] = new LegalPlayer();
-		players[2] = new LegalPlayer();
-		players[3] = new LegalPlayer();
+		players[1] = new NPCPlayer();
+		players[2] = new NPCPlayer();
+		players[3] = new NPCPlayer();
 
 
 		for (int i = 0; i < nbPlayers; i++) {

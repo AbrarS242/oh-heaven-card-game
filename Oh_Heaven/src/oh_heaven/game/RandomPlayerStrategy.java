@@ -3,8 +3,8 @@ import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 
 
-public class RandomPlayer extends NPCPlayer {
-    public Card pickCard() {
+public class RandomPlayerStrategy implements NPCPlayerStrategy {
+    public Card pickCard(Hand hand) {
         return CardRandomiser.getInstance().randomCard(hand);
     }
 }
