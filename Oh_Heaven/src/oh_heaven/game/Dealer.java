@@ -6,16 +6,6 @@ import ch.aplu.jcardgame.Hand;
 
 public class Dealer {
 
-    private static Dealer instance;
-
-    public static Dealer getInstance() {
-        if (instance == null) {
-            instance = new Dealer();
-        }
-        return instance;
-    }
-
-
     public void dealingOut(Deck deck, Player[] players, int nbPlayers, int nbCardsPerPlayer) {
         Hand pack = deck.toHand(false);
         // pack.setView(Oh_Heaven.this, new RowLayout(hideLocation, 0));

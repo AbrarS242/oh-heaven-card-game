@@ -55,6 +55,7 @@ public class Oh_Heaven extends CardGame {
   private final Location trickLocation = new Location(350, 350);
   private final Location textLocation = new Location(350, 450);
   private Player[] players;
+  private Dealer dealer = new Dealer();
   private Location hideLocation = new Location(-500, - 500);
   private Location trumpsActorLocation = new Location(50, 50);
 
@@ -139,7 +140,7 @@ private void initRound() {
 		for (int i = 0; i < nbPlayers; i++) {
 			   players[i].setHand(new Hand(deck));
 		}
-		Dealer.getInstance().dealingOut(deck,players, nbPlayers, nbStartCards);
+		dealer.dealingOut(deck,players, nbPlayers, nbStartCards);
 		 for (int i = 0; i < nbPlayers; i++) {
 			   players[i].getHand().sort(Hand.SortType.SUITPRIORITY, true);
 		 }
