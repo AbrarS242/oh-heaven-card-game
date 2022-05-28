@@ -5,28 +5,39 @@ import ch.aplu.jcardgame.*;
 import java.util.ArrayList;
 
 public class SmartHistory extends PlayObserver{
-    public enum Suit
-    {
-        SPADES, HEARTS, DIAMONDS, CLUBS
-    }
 
-    ArrayList<Card> playedClubCards = new ArrayList<Card>();
-    ArrayList<Card> playedDiamondCards = new ArrayList<Card>();
-    ArrayList<Card> playedHeartCards = new ArrayList<Card>();
-    ArrayList<Card> playedSpadeCards = new ArrayList<Card>();
 
-    public void update(Card cardPlayed, Player playedBy) {
-        if (cardPlayed.getSuit() == Suit.CLUBS) {
+    private ArrayList<Card> playedClubCards = new ArrayList<Card>();
+    private ArrayList<Card> playedDiamondCards = new ArrayList<Card>();
+    private ArrayList<Card> playedHeartCards = new ArrayList<Card>();
+    private ArrayList<Card> playedSpadeCards = new ArrayList<Card>();
+    private Oh_Heaven.Suit trumpSuit;
+    private Oh_Heaven.Suit leadSuit;
+
+
+    public void update(Card cardPlayed, Player playedBy, Oh_Heaven.Suit trumpSuit, Oh_Heaven.Suit leadSuit) {
+        if (cardPlayed.getSuit() == Oh_Heaven.Suit.CLUBS) {
             playedClubCards.add(cardPlayed);
         }
-        else if (cardPlayed.getSuit() == Suit.DIAMONDS) {
+        else if (cardPlayed.getSuit() == Oh_Heaven.Suit.DIAMONDS) {
             playedDiamondCards.add(cardPlayed);
         }
-        else if (cardPlayed.getSuit() == Suit.HEARTS) {
+        else if (cardPlayed.getSuit() == Oh_Heaven.Suit.HEARTS) {
             playedHeartCards.add(cardPlayed);
         }
-        else if (cardPlayed.getSuit() == Suit.SPADES) {
+        else if (cardPlayed.getSuit() == Oh_Heaven.Suit.SPADES) {
             playedSpadeCards.add(cardPlayed);
         }
+
+        this.trumpSuit = trumpSuit;
+        this.leadSuit = leadSuit;
+    }
+
+    public Oh_Heaven.Suit getTrumpSuit() {
+        return this.trumpSuit;
+    }
+
+    public Oh_Heaven.Suit getLeadSuit() {
+        return this.leadSuit;
     }
 }

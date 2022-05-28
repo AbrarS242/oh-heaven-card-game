@@ -9,11 +9,13 @@ import static ch.aplu.jgamegrid.Actor.delay;
 
 public class NPCPlayer extends Player {
     private final int thinkingTime = 2000;
+    // will need to fix these two below lines as they are hardcoded for legalPlayerStrategy and SmartHistory
+    // to be fixed in factory/player creator
     private NPCPlayerStrategy strategy = new LegalPlayerStrategy();
-    private ArrayList<PlayObserver> playObservers = new ArrayList<PlayObserver>();
+    private PlayObserver playObserver;
     public Card pickCard() {
         delay(thinkingTime);
-        return strategy.pickCard();
+        return strategy.pickCard(playObserver, hand);
     }
     public String getFollowStatus() {
         return "Player " + playerNum + " thinking...";
@@ -22,15 +24,14 @@ public class NPCPlayer extends Player {
         return "Player " + playerNum + " thinking...";
     }
 
-    public void addPlayObserver(PlayObserver observer) {
-        playObservers.add(observer);
+    // potentially instantiate the playObserver through this?? Could also be used for NPCPlayerStrategy instantiation
+    public void PlayObserver(PlayObserver observer) {
+        this.playObserver = observer;
     }
 
     // update() will need to take arguments such as:
     // card (as in card that was just played), player (that just played card), scores
-    public void update(Card playedCard, Player playedBy) {
-        for (PlayObserver observer: playObservers) {
-            observer.update(playedCard, playedBy);
-        }
+    public void update(Card playedCard, Player playedBy, Oh_Heaven.Suit trumpSuit, Oh_Heaven.Suit leadSuit) {
+        playObserver.update(playedCard, playedBy, trumpSuit, leadSuit);
     }
 }
