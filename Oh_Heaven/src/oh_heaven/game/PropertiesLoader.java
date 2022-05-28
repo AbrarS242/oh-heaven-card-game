@@ -12,6 +12,7 @@ public class PropertiesLoader {
     public static final int NUM_PLAYERS = 4;
     public static final String DEFAUlT_PROP_PATH = "properties/";
 
+    // Read a properties file
     public static Properties loadProperties(String propertiesFile){
 
         // Search for the specified properties file
@@ -37,6 +38,7 @@ public class PropertiesLoader {
         return null;
     }
 
+    // Load players from the specified properties file
     public static List<Player> loadPlayers(Properties properties){
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < NUM_PLAYERS; i++){
