@@ -5,8 +5,8 @@ import ch.aplu.jcardgame.Hand;
 import java.util.ArrayList;
 
 public class LegalPlayerStrategy implements NPCPlayerStrategy {
-
-    public Card pickCard(Hand hand) {
+    Hand hand;
+    public Card pickCard() {
         ArrayList<Card> legalCards = new ArrayList<>();
         for (Card card: hand.getCardList()) {
             if (!Referee.getInstance().ruleBroken(card, hand)) {

@@ -4,7 +4,8 @@ import ch.aplu.jcardgame.Hand;
 
 
 public class RandomPlayerStrategy implements NPCPlayerStrategy {
-    public Card pickCard(Hand hand) {
+    Hand hand;
+    public Card pickCard() {
         return CardRandomiser.getInstance().randomCard(hand);
     }
 }

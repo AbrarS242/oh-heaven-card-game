@@ -10,7 +10,7 @@ public class NPCPlayer extends Player {
     private NPCPlayerStrategy strategy = new LegalPlayerStrategy();
     public Card pickCard() {
         delay(thinkingTime);
-        return strategy.pickCard(hand);
+        return strategy.pickCard();
     }
     public String getFollowStatus() {
         return "Player " + playerNum + " thinking...";
