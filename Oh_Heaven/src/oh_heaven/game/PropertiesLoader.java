@@ -39,11 +39,13 @@ public class PropertiesLoader {
     }
 
     // Load players from the specified properties file
-    public static List<Player> loadPlayers(Properties properties){
-        List<Player> players = new ArrayList<>();
+    public static List<String> loadPlayers(Properties properties){
+        //List<Player> players = new ArrayList<>();
+        List<String> players = new ArrayList<>();
         for (int i = 0; i < NUM_PLAYERS; i++){
             String playerType = properties.getProperty("players." + i);
-            players.add(new Player(playerType));
+            //players.add(new Player(playerType));
+            players.add(playerType);
         }
         return players;
     }
