@@ -6,7 +6,7 @@ import oh_heaven.utility.CardRandomiser;
 import java.util.ArrayList;
 
 public class LegalPlayerStrategy implements NPCPlayerStrategy {
-    public Card pickCard(PlayObserver playObserver, Hand hand) {
+    public Card pickCard(Hand hand) {
         ArrayList<Card> legalCards = new ArrayList<>();
         for (Card card: hand.getCardList()) {
             if (!Referee.getInstance().ruleBroken(card, hand)) {

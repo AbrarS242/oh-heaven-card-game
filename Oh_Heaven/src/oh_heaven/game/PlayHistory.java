@@ -1,43 +1,43 @@
 package oh_heaven.game;
 
-import ch.aplu.jcardgame.*;
+import ch.aplu.jcardgame.Card;
 
 import java.util.ArrayList;
 
-public class SmartHistory extends PlayObserver{
-
+public class PlayHistory {
 
     private ArrayList<Card> playedClubCards = new ArrayList<Card>();
+    private ArrayList<Integer> clubPlayers = new ArrayList<>();
     private ArrayList<Card> playedDiamondCards = new ArrayList<Card>();
+    private ArrayList<Integer> diamondPlayers = new ArrayList<>();
     private ArrayList<Card> playedHeartCards = new ArrayList<Card>();
+    private ArrayList<Integer> heartPlayers = new ArrayList<>();
     private ArrayList<Card> playedSpadeCards = new ArrayList<Card>();
-    private Oh_Heaven.Suit trumpSuit;
-    private Oh_Heaven.Suit leadSuit;
+    private ArrayList<Integer> spadePlayers = new ArrayList<>();
 
+    private int[] scores;
+    private int[] tricks;
 
-    public void update(Card cardPlayed, Player playedBy, Oh_Heaven.Suit trumpSuit, Oh_Heaven.Suit leadSuit) {
+    public void update(Card cardPlayed, int playerNum, int[] scores, int[] tricks){
         if (cardPlayed.getSuit() == Oh_Heaven.Suit.CLUBS) {
             playedClubCards.add(cardPlayed);
+            clubPlayers.add(playerNum);
         }
         else if (cardPlayed.getSuit() == Oh_Heaven.Suit.DIAMONDS) {
             playedDiamondCards.add(cardPlayed);
+            diamondPlayers.add(playerNum);
         }
         else if (cardPlayed.getSuit() == Oh_Heaven.Suit.HEARTS) {
             playedHeartCards.add(cardPlayed);
+            heartPlayers.add(playerNum);
         }
         else if (cardPlayed.getSuit() == Oh_Heaven.Suit.SPADES) {
             playedSpadeCards.add(cardPlayed);
+            spadePlayers.add(playerNum);
         }
-
-        this.trumpSuit = trumpSuit;
-        this.leadSuit = leadSuit;
+        this.scores = scores;
+        this.tricks = tricks;
     }
 
-    public Oh_Heaven.Suit getTrumpSuit() {
-        return this.trumpSuit;
-    }
 
-    public Oh_Heaven.Suit getLeadSuit() {
-        return this.leadSuit;
-    }
 }

@@ -4,5 +4,5 @@ import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 
 public interface NPCPlayerStrategy {
-    public abstract Card pickCard(PlayObserver playObserver, Hand hand);
+    public abstract Card pickCard(Hand hand);
 }

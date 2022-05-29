@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class Oh_Heaven extends CardGame {
 
   private Properties properties;
+  private PlayPublisher playPublisher;
 
   public enum Suit
   {
@@ -141,6 +142,9 @@ private void initRound() {
 			players[i] = playerFactory.createPlayer(playerType, i);
 		}
 
+		// Create subscribers
+		playPublisher = new PlayPublisher(players, nbPlayers);
+
 
 		for (int i = 0; i < nbPlayers; i++) {
 			   players[i].setHand(new Hand(deck));
@@ -193,6 +197,7 @@ private void playRound() {
 			selected.transfer(trick, true); // transfer to trick (includes graphic effect)
 			winner = nextPlayer;
 			winningCard = selected;
+			playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks);
 		// End Lead
 		for (int j = 1; j < nbPlayers; j++) {
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
@@ -211,6 +216,7 @@ private void playRound() {
 				}
 				// End Check
 				 selected.transfer(trick, true); // transfer to trick (includes graphic effect)
+				 playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks);
 				 System.out.println("winning: " + winningCard);
 				 System.out.println(" played: " + selected);
 				 // System.out.println("winning: suit = " + winningCard.getSuit() + ", rank = " + (13 - winningCard.getRankId()));
