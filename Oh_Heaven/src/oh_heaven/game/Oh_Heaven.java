@@ -197,7 +197,7 @@ private void playRound() {
 			selected.transfer(trick, true); // transfer to trick (includes graphic effect)
 			winner = nextPlayer;
 			winningCard = selected;
-			playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks);
+			playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks, trumps, lead);
 		// End Lead
 		for (int j = 1; j < nbPlayers; j++) {
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
@@ -216,7 +216,7 @@ private void playRound() {
 				}
 				// End Check
 				 selected.transfer(trick, true); // transfer to trick (includes graphic effect)
-				 playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks);
+				 playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks, trumps, lead);
 				 System.out.println("winning: " + winningCard);
 				 System.out.println(" played: " + selected);
 				 // System.out.println("winning: suit = " + winningCard.getSuit() + ", rank = " + (13 - winningCard.getRankId()));

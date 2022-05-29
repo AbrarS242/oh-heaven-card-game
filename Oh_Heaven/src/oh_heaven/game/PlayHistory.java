@@ -18,7 +18,10 @@ public class PlayHistory {
     private int[] scores;
     private int[] tricks;
 
-    public void update(Card cardPlayed, int playerNum, int[] scores, int[] tricks){
+    private Oh_Heaven.Suit trump;
+    private Oh_Heaven.Suit lead;
+
+    public void update(Card cardPlayed, int playerNum, int[] scores, int[] tricks, Oh_Heaven.Suit trump, Oh_Heaven.Suit lead){
         if (cardPlayed.getSuit() == Oh_Heaven.Suit.CLUBS) {
             playedClubCards.add(cardPlayed);
             clubPlayers.add(playerNum);
@@ -37,6 +40,8 @@ public class PlayHistory {
         }
         this.scores = scores;
         this.tricks = tricks;
+        this.trump = trump;
+        this.lead = lead;
     }
 
 
