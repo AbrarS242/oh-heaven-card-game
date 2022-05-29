@@ -8,46 +8,70 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
 // need to make it that somehow SmartPlayerStrategy has access to an instance of SmartHistory
 
     // problem here, the parameter needs to be of type SmartHistory not PlayObserver. How do we solve this?
-<<<<<<< HEAD
     public Card pickCard(PlayHistory playHistory, Hand hand) {
         // look for trump suit cards, play highest card (if it will win)
         // look for lead suit cards, play highest card (if it will win)
-        Card trumpMax = null;
+        Card trumpMax = getMaxCardOfSuit(hand, playHistory.getTrumpSuit());
         Card leadMax = null;
         Card minCard = null;
-        for (Card card: hand.getCardList()) {
-            if (card.getSuit() == playHistory.getTrumpSuit()) {
-                if (trumpMax == null) {
-                    trumpMax = card;
-                }
-                else if (trumpMax.getRankId() < card.getRankId()) {
-                    trumpMax = card;
+        // playHistory would contain a playNo variable which would just be a count of how many plays there have been in total
+        if (playHistory.getPlayNo() % 4 == 0) {
+            if (trumpMax != null) {
+                return trumpMax;
+            }
+            else {
+                return getMaxCard(hand);
+            }
+        }
+
+        leadMax = getMaxCardOfSuit(hand, playHistory.getLeadSuit());
+        minCard = getMinCard(hand);
+
+        if (leadMax == null) {
+            if (trumpMax == null || trumpMax.getRankId() < playHistory.getLeadTrumpRankId()) {
+                return minCard;
+            }
+            return trumpMax;
+        }
+        return leadMax;
+    }
+
+    public Card getMaxCardOfSuit(Hand hand, Oh_Heaven.Suit suit) {
+        Card maxCardOfSuit = null;
+        for (Card card : hand.getCardList()) {
+            if (card.getSuit() == suit) {
+                if (maxCardOfSuit == null) {
+                    maxCardOfSuit = card;
+                } else if (maxCardOfSuit.getRankId() < card.getRankId()) {
+                    maxCardOfSuit = card;
                 }
             }
-            else if (card.getSuit() == playHistory.getLeadSuit()) {
-                if (leadMax == null) {
-                    leadMax = card;
-                }
-                else if (leadMax.getRankId() < card.getRankId()) {
-                    leadMax = card;
-                }
+        }
+        return maxCardOfSuit;
+    }
+
+    public Card getMaxCard(Hand hand) {
+        Card maxCard = null;
+        for (Card card : hand.getCardList()) {
+            if (maxCard == null) {
+                maxCard = card;
+            } else if (maxCard.getRankId() < card.getRankId()) {
+                maxCard = card;
             }
-            else if (minCard == null || minCard.getRankId() > card.getRankId()) {
+        }
+        return maxCard;
+    }
+
+    public Card getMinCard(Hand hand) {
+        Card minCard = null;
+        for (Card card : hand.getCardList()) {
+            if (minCard == null) {
+                minCard = card;
+            } else if (minCard.getRankId() > card.getRankId()) {
                 minCard = card;
             }
         }
-        if (trumpMax == null || trumpMax.getRankId() < playHistory.getLeadTrumpRankId) {
-            if (leadMax == null || leadMax.getRankId() < playHistory.getLeadLeadRankId) {
-                return minCard;
-            }
-            return leadMax;
-        }
-        return trumpMax;
-=======
-    public Card pickCard(PlayObserver playObserver, Hand hand) {
-
-        // Needs to be changed. Only included here to test other aspects of the code
-        return CardRandomiser.getInstance().randomCard(hand);
->>>>>>> a2875e579c3768aef02e622cb33d1d1f7b873f70
+        return minCard;
     }
+
 }
