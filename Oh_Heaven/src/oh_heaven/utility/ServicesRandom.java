@@ -1,5 +1,7 @@
 package oh_heaven.utility;
 
+import oh_heaven.game.CardRandomiser;
+
 import java.util.Random;
 
 public class ServicesRandom {
@@ -14,6 +16,7 @@ public class ServicesRandom {
                 random = new Random(seed);
                 System.out.println("Seed = " + seed);
             }
+            CardRandomiser.setRandom(random);
         }
     }
 

@@ -17,8 +17,7 @@ public class CardRandomiser {
         return instance;
     }
 
-    static public final int seed = 30006;
-    static final Random random = new Random(seed);
+    private static Random random;
 
     // return random Enum value
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
@@ -38,4 +37,7 @@ public class CardRandomiser {
         return list.get(x);
     }
 
+    public static void setRandom(Random random) {
+        CardRandomiser.random = random;
+    }
 }
