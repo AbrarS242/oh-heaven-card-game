@@ -5,16 +5,15 @@ import ch.aplu.jcardgame.Hand;
 import java.util.ArrayList;
 
 public class LegalPlayerStrategy implements NPCPlayerStrategy {
-    Hand hand;
     public Card pickCard(PlayObserver playObserver, Hand hand) {
         ArrayList<Card> legalCards = new ArrayList<>();
-        for (Card card: this.hand.getCardList()) {
-            if (!Referee.getInstance().ruleBroken(card, this.hand)) {
+        for (Card card: hand.getCardList()) {
+            if (!Referee.getInstance().ruleBroken(card, hand)) {
                 legalCards.add(card);
             }
         }
         if (legalCards.isEmpty()) {
-            return CardRandomiser.getInstance().randomCard(this.hand);
+            return CardRandomiser.getInstance().randomCard(hand);
         }
         else {
             return CardRandomiser.getInstance().randomCard(legalCards);

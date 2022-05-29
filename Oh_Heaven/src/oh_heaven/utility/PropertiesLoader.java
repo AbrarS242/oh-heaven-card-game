@@ -1,4 +1,4 @@
-package oh_heaven.game;
+package oh_heaven.utility;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,11 +9,11 @@ import java.util.Properties;
 
 public class PropertiesLoader {
 
-    public static final int NUM_PLAYERS = 4;
+
     public static final String DEFAUlT_PROP_PATH = "properties/";
 
     // Read a properties file
-    public static Properties loadProperties(String propertiesFile){
+    public static Properties loadPropertiesFile(String propertiesFile){
 
         // Search for the specified properties file
         if (propertiesFile == null) {
@@ -38,17 +38,7 @@ public class PropertiesLoader {
         return null;
     }
 
-    // Load players from the specified properties file
-    public static List<String> loadPlayers(Properties properties){
-        //List<Player> players = new ArrayList<>();
-        List<String> players = new ArrayList<>();
-        for (int i = 0; i < NUM_PLAYERS; i++){
-            String playerType = properties.getProperty("players." + i);
-            //players.add(new Player(playerType));
-            players.add(playerType);
-        }
-        return players;
-    }
+
 
 
 }

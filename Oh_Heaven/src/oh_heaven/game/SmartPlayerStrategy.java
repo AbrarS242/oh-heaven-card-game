@@ -9,5 +9,7 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
     // problem here, the parameter needs to be of type SmartHistory not PlayObserver. How do we solve this?
     public Card pickCard(PlayObserver playObserver, Hand hand) {
 
+        // Needs to be changed. Only included here to test other aspects of the code
+        return CardRandomiser.getInstance().randomCard(hand);
     }
 }

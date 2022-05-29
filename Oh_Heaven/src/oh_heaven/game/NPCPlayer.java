@@ -9,9 +9,14 @@ import static ch.aplu.jgamegrid.Actor.delay;
 
 public class NPCPlayer extends Player {
     private final int thinkingTime = 2000;
+    private NPCPlayerStrategy strategy;
+    public NPCPlayer(NPCPlayerStrategy strategy) {
+        this.strategy = strategy;
+    }
+
     // will need to fix these two below lines as they are hardcoded for legalPlayerStrategy and SmartHistory
     // to be fixed in factory/player creator
-    private NPCPlayerStrategy strategy = new LegalPlayerStrategy();
+    //private NPCPlayerStrategy strategy = new LegalPlayerStrategy();
     private PlayObserver playObserver;
     public Card pickCard() {
         delay(thinkingTime);
