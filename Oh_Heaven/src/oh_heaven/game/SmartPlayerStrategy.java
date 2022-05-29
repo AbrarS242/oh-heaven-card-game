@@ -12,8 +12,9 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
         // look for trump suit cards, play highest card (if it will win)
         // look for lead suit cards, play highest card (if it will win)
         Card trumpMax = getMaxCardOfSuit(hand, playHistory.getTrumpSuit());
-        Card leadMax = null;
-        Card minCard = null;
+        Card leadMax;
+        Card minCard;
+        Card leadMin;
         // playHistory would contain a playNo variable which would just be a count of how many plays there have been in total
         if (playHistory.getPlayNo() % 4 == 0) {
             if (trumpMax != null) {
@@ -27,11 +28,17 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
         leadMax = getMaxCardOfSuit(hand, playHistory.getLeadSuit());
         minCard = getMinCard(hand);
 
-        if (leadMax == null) {
+
+        if (leadMax == null ) { // if there is no card of the leading suit in hand
             if (trumpMax == null || trumpMax.getRankId() < playHistory.getLeadTrumpRankId()) {
+                // if there is no card of trump suit OR the highest ranking card in hand of the trump will not win
                 return minCard;
             }
             return trumpMax;
+        }
+        // if the highest ranking card of the lead suit will not win
+        if (leadMax.getRankId() < playHistory.getWinningRankId()) {
+            return minCard;
         }
         return leadMax;
     }

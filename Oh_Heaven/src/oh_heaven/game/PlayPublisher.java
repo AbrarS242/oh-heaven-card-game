@@ -14,10 +14,18 @@ public class PlayPublisher {
         this.nbPlayers = nbPlayers;
     }
 
-    public void notifyPlayers(Card cardPlayed, int playerNum, int[] scores, int[] tricks, Oh_Heaven.Suit trump, Oh_Heaven.Suit lead){
+    public void notifyPlayers(Card cardPlayed, int playerNum, int[] scores, int[] tricks, Oh_Heaven.Suit trump, Oh_Heaven.Suit lead, Card winningCard){
         for (int i = 0; i < nbPlayers; i++) {
             if (players[i] instanceof NPCPlayer){
-                ((NPCPlayer) players[i]).update(cardPlayed, playerNum, scores, tricks, trump, lead);
+                ((NPCPlayer) players[i]).update(cardPlayed, playerNum, scores, tricks, trump, lead, winningCard);
+            }
+        }
+    }
+
+    public void notifyPlayers(Oh_Heaven.Suit trump) {
+        for (int i = 0; i < nbPlayers; i++) {
+            if (players[i] instanceof NPCPlayer){
+                ((NPCPlayer) players[i]).update(trump);
             }
         }
     }

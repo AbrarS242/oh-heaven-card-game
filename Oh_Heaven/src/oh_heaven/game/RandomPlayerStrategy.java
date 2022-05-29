@@ -6,7 +6,7 @@ import oh_heaven.utility.CardRandomiser;
 
 public class RandomPlayerStrategy implements NPCPlayerStrategy {
 
-    public Card pickCard(Hand hand) {
+    public Card pickCard(PlayHistory playHistory, Hand hand) {
         return CardRandomiser.getInstance().randomCard(hand);
     }
 }

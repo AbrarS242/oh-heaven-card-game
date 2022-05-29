@@ -174,6 +174,8 @@ private void playRound() {
 		final Actor trumpsActor = new Actor("sprites/"+trumpImage[trumps.ordinal()]);
 	    addActor(trumpsActor, trumpsActorLocation);
 	// End trump suit
+	// update trump suit in each player's information storage
+	playPublisher.notifyPlayers(trumps);
 	Hand trick;
 	int winner;
 	Card winningCard;
@@ -197,7 +199,7 @@ private void playRound() {
 			selected.transfer(trick, true); // transfer to trick (includes graphic effect)
 			winner = nextPlayer;
 			winningCard = selected;
-			playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks, trumps, lead);
+			playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks, trumps, lead, winningCard);
 		// End Lead
 		for (int j = 1; j < nbPlayers; j++) {
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
@@ -216,7 +218,6 @@ private void playRound() {
 				}
 				// End Check
 				 selected.transfer(trick, true); // transfer to trick (includes graphic effect)
-				 playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks, trumps, lead);
 				 System.out.println("winning: " + winningCard);
 				 System.out.println(" played: " + selected);
 				 // System.out.println("winning: suit = " + winningCard.getSuit() + ", rank = " + (13 - winningCard.getRankId()));
@@ -229,6 +230,7 @@ private void playRound() {
 					 winner = nextPlayer;
 					 winningCard = selected;
 				 }
+				 playPublisher.notifyPlayers(selected, nextPlayer, scores, tricks, trumps, lead, winningCard);
 			// End Follow
 		}
 		lead = null;

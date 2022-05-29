@@ -23,7 +23,7 @@ public class NPCPlayer extends Player {
     // Select a card from the hand according to strategy
     public Card pickCard() {
         delay(thinkingTime);
-        return strategy.pickCard(hand);
+        return strategy.pickCard(playHistory, hand);
     }
 
 
@@ -35,8 +35,12 @@ public class NPCPlayer extends Player {
     }
 
     // Update the play history
-    public void update(Card playedCard, int playerNum, int[] scores, int[] tricks, Oh_Heaven.Suit trump, Oh_Heaven.Suit lead) {
-        playHistory.update(playedCard, playerNum, scores, tricks, trump, lead);
+    public void update(Card playedCard, int playerNum, int[] scores, int[] tricks, Oh_Heaven.Suit trump, Oh_Heaven.Suit lead, Card winningCard) {
+        playHistory.update(playedCard, playerNum, scores, tricks, trump, lead, winningCard);
+    }
+
+    public void update(Oh_Heaven.Suit trump) {
+        playHistory.update(trump);
     }
 }
 
