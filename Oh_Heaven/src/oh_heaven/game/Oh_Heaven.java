@@ -1,7 +1,7 @@
 package oh_heaven.game;
 
+import oh_heaven.utility.CardRandomiser;
 import oh_heaven.utility.PropertiesLoader;
-import oh_heaven.utility.ServicesRandom;
 
 // Oh_Heaven.java
 
@@ -111,7 +111,7 @@ private void initBids(Suit trumps, int nextPlayer) {
 	int total = 0;
 	for (int i = nextPlayer; i < nextPlayer + nbPlayers; i++) {
 		 int iP = i % nbPlayers;
-		 bids[iP] = nbStartCards / 4 + CardRandomiser.getInstance().random.nextInt(2);
+		 bids[iP] = nbStartCards / 4 + CardRandomiser.getInstance().get().nextInt(2);
 		 total += bids[iP];
 	 }
 	 if (total == nbStartCards) {  // Force last bid so not every bid possible
@@ -119,7 +119,7 @@ private void initBids(Suit trumps, int nextPlayer) {
 		 if (bids[iP] == 0) {
 			 bids[iP] = 1;
 		 } else {
-			 bids[iP] += CardRandomiser.getInstance().random.nextBoolean() ? -1 : 1;
+			 bids[iP] += CardRandomiser.getInstance().get().nextBoolean() ? -1 : 1;
 		 }
 	 }
 	// for (int i = 0; i < nbPlayers; i++) {
@@ -173,7 +173,7 @@ private void playRound() {
 	Hand trick;
 	int winner;
 	Card winningCard;
-	int nextPlayer = CardRandomiser.getInstance().random.nextInt(nbPlayers); // randomly select player to lead for this round
+	int nextPlayer = CardRandomiser.getInstance().get().nextInt(nbPlayers); // randomly select player to lead for this round
 	initBids(trumps, nextPlayer);
     // initScore();
     for (int i = 0; i < nbPlayers; i++) updateScore(i);
@@ -288,7 +288,7 @@ private void playRound() {
 	if (seedProp != null){
 		seed = Long.parseLong(seedProp);
 	}
-	ServicesRandom.initServicesRandom(seed);
+	CardRandomiser.getInstance().initCardRandomiser(seed);
 
     new Oh_Heaven(properties);
   }
