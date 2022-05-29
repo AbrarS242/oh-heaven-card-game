@@ -25,6 +25,10 @@ public class Referee {
         }
     }
 
+    public void setEnforceRules(boolean enforceRules) {
+        this.enforceRules = enforceRules;
+    }
+
     public void violationResponse(int nextPlayer, Card card) {
         // Rule violation
         String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + card;
@@ -39,7 +43,7 @@ public class Referee {
             }
     }
 
-    public static void setGame(Oh_Heaven game) {
+    public void setGame(Oh_Heaven game) {
         Referee.game = game;
     }
 }

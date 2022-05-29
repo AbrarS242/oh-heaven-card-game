@@ -37,8 +37,8 @@ public class Oh_Heaven extends CardGame {
 	 
   private final String version = "1.0";
   public final int nbPlayers = 4;
-  public final int nbStartCards = 13;
-  public final int nbRounds = 3;
+  public int nbStartCards = 13;
+  public int nbRounds = 3;
   public final int madeBidBonus = 10;
   private final int handWidth = 400;
   private final int trickWidth = 40;
@@ -241,11 +241,16 @@ private void playRound() {
   {
 	super(700, 700, 30);
 	this.properties = properties;
+	nbStartCards = Integer.parseInt(properties.getProperty("nbStartCards"));
+	nbRounds = Integer.parseInt(properties.getProperty("rounds"));
+	Referee.getInstance().setEnforceRules(Boolean.parseBoolean(properties.getProperty("enforceRules")));
+	Referee.getInstance().setGame(this);
+
     setTitle("Oh_Heaven (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
     setStatusText("Initializing...");
     initScores();
     initScore();
-    Referee.setGame(this);
+
     for (int i=0; i <nbRounds; i++) {
       initTricks();
       initRound();
