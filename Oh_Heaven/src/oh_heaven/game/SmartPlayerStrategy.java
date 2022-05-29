@@ -23,24 +23,19 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
         leadMax = getMaxCardOfSuit(hand, playHistory.getLeadSuit());
         minCard = getMinCard(hand);
         leadMin = getMinCardOfSuit(hand, playHistory.getLeadSuit());
-        System.out.println("leadMax " + leadMax + "minCard " + minCard + "leadMin " + leadMin);
 
         // if there is no card of the leading suit in hand
         if (leadMax == null ) {
             if (trumpMax == null || trumpMax.getRankId() < playHistory.getLeadTrumpRankId()) {
                 // if there is no card of trump suit OR the highest ranking card in hand of the trump will not win
-                System.out.println("gets here, returning minCard");
                 return minCard;
             }
-            System.out.println("gets here, returning trumpMax");
             return trumpMax;
         }
         // if the highest ranking card of the lead suit will not win
         if (leadMax.getRankId() > playHistory.getWinningRankId()) {
-            System.out.println("gets here, returning leadMin");
             return leadMin;
         }
-        System.out.println("gets here, returning leadMax");
         return leadMax;
     }
 
