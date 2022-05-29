@@ -1,5 +1,8 @@
 package oh_heaven.game;
 
+import oh_heaven.utility.CardRandomiser;
+import oh_heaven.utility.PropertiesLoader;
+
 // Oh_Heaven.java
 
 import ch.aplu.jcardgame.*;
@@ -11,7 +14,9 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("serial")
 public class Oh_Heaven extends CardGame {
-	
+
+  private Properties properties;
+
   public enum Suit
   {
     SPADES, HEARTS, DIAMONDS, CLUBS
@@ -106,7 +111,7 @@ private void initBids(Suit trumps, int nextPlayer) {
 	int total = 0;
 	for (int i = nextPlayer; i < nextPlayer + nbPlayers; i++) {
 		 int iP = i % nbPlayers;
-		 bids[iP] = nbStartCards / 4 + CardRandomiser.getInstance().random.nextInt(2);
+		 bids[iP] = nbStartCards / 4 + CardRandomiser.getInstance().get().nextInt(2);
 		 total += bids[iP];
 	 }
 	 if (total == nbStartCards) {  // Force last bid so not every bid possible
@@ -114,7 +119,7 @@ private void initBids(Suit trumps, int nextPlayer) {
 		 if (bids[iP] == 0) {
 			 bids[iP] = 1;
 		 } else {
-			 bids[iP] += CardRandomiser.getInstance().random.nextBoolean() ? -1 : 1;
+			 bids[iP] += CardRandomiser.getInstance().get().nextBoolean() ? -1 : 1;
 		 }
 	 }
 	// for (int i = 0; i < nbPlayers; i++) {
@@ -128,13 +133,13 @@ private Suit lead;
 
 private void initRound() {
 		players = new Player[nbPlayers];
+		PlayerFactory playerFactory = new PlayerFactory();
 
-		// Below needs to be changed to account for property file
-
-		players[0] = new ActivePlayer();
-		players[1] = new NPCPlayer();
-		players[2] = new NPCPlayer();
-		players[3] = new NPCPlayer();
+		// Create players
+		for (int i = 0; i < nbPlayers; i++){
+			String playerType = properties.getProperty("players." + i);
+			players[i] = playerFactory.createPlayer(playerType, i);
+		}
 
 
 		for (int i = 0; i < nbPlayers; i++) {
@@ -168,7 +173,7 @@ private void playRound() {
 	Hand trick;
 	int winner;
 	Card winningCard;
-	int nextPlayer = CardRandomiser.getInstance().random.nextInt(nbPlayers); // randomly select player to lead for this round
+	int nextPlayer = CardRandomiser.getInstance().get().nextInt(nbPlayers); // randomly select player to lead for this round
 	initBids(trumps, nextPlayer);
     // initScore();
     for (int i = 0; i < nbPlayers; i++) updateScore(i);
@@ -232,9 +237,10 @@ private void playRound() {
 	removeActor(trumpsActor);
 }
 
-  public Oh_Heaven()
+  public Oh_Heaven(Properties properties)
   {
 	super(700, 700, 30);
+	this.properties = properties;
     setTitle("Oh_Heaven (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
     setStatusText("Initializing...");
     initScores();
@@ -267,14 +273,24 @@ private void playRound() {
 
   public static void main(String[] args)
   {
-	// System.out.println("Working Directory = " + System.getProperty("user.dir"));
-	final Properties properties;
+
+  	// Load the properties file
+  	final Properties properties;
 	if (args == null || args.length == 0) {
-	//  properties = PropertiesLoader.loadPropertiesFile(null);
+		properties = PropertiesLoader.loadPropertiesFile(null);
 	} else {
-	//      properties = PropertiesLoader.loadPropertiesFile(args[0]);
+		properties = PropertiesLoader.loadPropertiesFile(args[0]);
 	}
-    new Oh_Heaven();
+
+	// Utilise a seed
+	String seedProp = properties.getProperty("seed");
+	Long seed = null;
+	if (seedProp != null){
+		seed = Long.parseLong(seedProp);
+	}
+	CardRandomiser.getInstance().initCardRandomiser(seed);
+
+    new Oh_Heaven(properties);
   }
 
 	public Card getSelected() {

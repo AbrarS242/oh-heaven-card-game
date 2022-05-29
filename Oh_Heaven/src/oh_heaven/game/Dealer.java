@@ -3,6 +3,7 @@ package oh_heaven.game;
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Deck;
 import ch.aplu.jcardgame.Hand;
+import oh_heaven.utility.CardRandomiser;
 
 public class Dealer {
 

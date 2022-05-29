@@ -2,11 +2,13 @@ package oh_heaven.game;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
+import oh_heaven.utility.CardRandomiser;
 
 public class SmartPlayerStrategy implements NPCPlayerStrategy {
 // need to make it that somehow SmartPlayerStrategy has access to an instance of SmartHistory
 
     // problem here, the parameter needs to be of type SmartHistory not PlayObserver. How do we solve this?
+<<<<<<< HEAD
     public Card pickCard(PlayHistory playHistory, Hand hand) {
         // look for trump suit cards, play highest card (if it will win)
         // look for lead suit cards, play highest card (if it will win)
@@ -41,5 +43,11 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
             return leadMax;
         }
         return trumpMax;
+=======
+    public Card pickCard(PlayObserver playObserver, Hand hand) {
+
+        // Needs to be changed. Only included here to test other aspects of the code
+        return CardRandomiser.getInstance().randomCard(hand);
+>>>>>>> a2875e579c3768aef02e622cb33d1d1f7b873f70
     }
 }
