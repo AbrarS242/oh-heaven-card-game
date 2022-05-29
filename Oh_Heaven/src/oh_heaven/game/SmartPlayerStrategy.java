@@ -17,29 +17,30 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
         Card leadMin;
         // playHistory would contain a playNo variable which would just be a count of how many plays there have been in total
         if (playHistory.getPlayNo() % 4 == 0) {
-            if (trumpMax != null) {
-                return trumpMax;
-            }
-            else {
-                return getMaxCard(hand);
-            }
+            return getMaxCard(hand);
         }
 
         leadMax = getMaxCardOfSuit(hand, playHistory.getLeadSuit());
         minCard = getMinCard(hand);
+        leadMin = getMinCardOfSuit(hand, playHistory.getLeadSuit());
+        System.out.println("leadMax " + leadMax + "minCard " + minCard + "leadMin " + leadMin);
 
-
-        if (leadMax == null ) { // if there is no card of the leading suit in hand
+        // if there is no card of the leading suit in hand
+        if (leadMax == null ) {
             if (trumpMax == null || trumpMax.getRankId() < playHistory.getLeadTrumpRankId()) {
                 // if there is no card of trump suit OR the highest ranking card in hand of the trump will not win
+                System.out.println("gets here, returning minCard");
                 return minCard;
             }
+            System.out.println("gets here, returning trumpMax");
             return trumpMax;
         }
         // if the highest ranking card of the lead suit will not win
-        if (leadMax.getRankId() < playHistory.getWinningRankId()) {
-            return minCard;
+        if (leadMax.getRankId() > playHistory.getWinningRankId()) {
+            System.out.println("gets here, returning leadMin");
+            return leadMin;
         }
+        System.out.println("gets here, returning leadMax");
         return leadMax;
     }
 
@@ -49,7 +50,7 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
             if (card.getSuit() == suit) {
                 if (maxCardOfSuit == null) {
                     maxCardOfSuit = card;
-                } else if (maxCardOfSuit.getRankId() < card.getRankId()) {
+                } else if (maxCardOfSuit.getRankId() > card.getRankId()) {
                     maxCardOfSuit = card;
                 }
             }
@@ -57,12 +58,26 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
         return maxCardOfSuit;
     }
 
+    public Card getMinCardOfSuit(Hand hand, Oh_Heaven.Suit suit) {
+        Card minCardOfSuit = null;
+        for (Card card : hand.getCardList()) {
+            if (card.getSuit() == suit) {
+                if (minCardOfSuit == null) {
+                    minCardOfSuit = card;
+                } else if (minCardOfSuit.getRankId() < card.getRankId()) {
+                    minCardOfSuit = card;
+                }
+            }
+        }
+        return minCardOfSuit;
+    }
+
     public Card getMaxCard(Hand hand) {
         Card maxCard = null;
         for (Card card : hand.getCardList()) {
             if (maxCard == null) {
                 maxCard = card;
-            } else if (maxCard.getRankId() < card.getRankId()) {
+            } else if (maxCard.getRankId() > card.getRankId()) {
                 maxCard = card;
             }
         }
@@ -74,7 +89,7 @@ public class SmartPlayerStrategy implements NPCPlayerStrategy {
         for (Card card : hand.getCardList()) {
             if (minCard == null) {
                 minCard = card;
-            } else if (minCard.getRankId() > card.getRankId()) {
+            } else if (minCard.getRankId() < card.getRankId()) {
                 minCard = card;
             }
         }
