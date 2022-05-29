@@ -14,9 +14,8 @@ public class NPCPlayer extends Player {
         this.strategy = strategy;
     }
 
-    // will need to fix these two below lines as they are hardcoded for legalPlayerStrategy and SmartHistory
+    // will need to fix this below line as they are hardcoded for legalPlayerStrategy and SmartHistory
     // to be fixed in factory/player creator
-    //private NPCPlayerStrategy strategy = new LegalPlayerStrategy();
     private PlayObserver playObserver;
     public Card pickCard() {
         delay(thinkingTime);
@@ -29,7 +28,7 @@ public class NPCPlayer extends Player {
         return "Player " + playerNum + " thinking...";
     }
 
-    // potentially instantiate the playObserver through this?? Could also be used for NPCPlayerStrategy instantiation
+    // potentially instantiate the playObserver through this??
     public void PlayObserver(PlayObserver observer) {
         this.playObserver = observer;
     }

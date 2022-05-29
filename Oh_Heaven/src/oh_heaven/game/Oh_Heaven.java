@@ -135,7 +135,7 @@ private void initRound() {
 		players = new Player[nbPlayers];
 		PlayerFactory playerFactory = new PlayerFactory();
 
-		// Create players 
+		// Create players
 		for (int i = 0; i < nbPlayers; i++){
 			String playerType = properties.getProperty("players." + i);
 			players[i] = playerFactory.createPlayer(playerType);
