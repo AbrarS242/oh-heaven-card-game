@@ -8,15 +8,15 @@ public class PlayerFactory {
 
     private Player player = null;
 
-    public Player createPlayer(String playerType){
+    public Player createPlayer(String playerType, int i){
         if (playerType.equals(HUMAN_PLAYER)){
-            player = new ActivePlayer();
+            player = new ActivePlayer(i);
         } else if (playerType.equals(RANDOM_PLAYER)){
-            player = new NPCPlayer(new RandomPlayerStrategy());
+            player = new NPCPlayer(new RandomPlayerStrategy(), i);
         } else if (playerType.equals(LEGAL_PLAYER)){
-            player = new NPCPlayer(new LegalPlayerStrategy());
+            player = new NPCPlayer(new LegalPlayerStrategy(), i);
         } else if (playerType.equals(SMART_PLAYER)){
-            player = new NPCPlayer(new SmartPlayerStrategy());
+            player = new NPCPlayer(new SmartPlayerStrategy(), i);
         }
         return player;
     }

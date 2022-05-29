@@ -11,6 +11,10 @@ public class ActivePlayer extends Player {
 
     Card selected;
 
+    public ActivePlayer(int i) {
+        this.playerNum = i;
+    }
+
     public void setHand(Hand hand) {
         super.setHand(hand);
         // Set up human player for interaction
